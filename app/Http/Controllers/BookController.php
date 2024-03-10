@@ -21,17 +21,30 @@ class BookController extends Controller
         $data->when($q, function($query) use ($q){
             return $query->whereRaw("title LIKE '%".strtolower($q)."%'");
         });
-        return response()->json([
-            'status' => 'success',
-            'data' => $data->paginate(10)
+        // return response()->json([
+        //     'status' => 'success',
+        //     'data' => $data->paginate(10)
+        // ]);
+        return view('book.index', [
+            "tittle" => "Book",
+            "active" => "book",
+            'buku' => $data->paginate(10)
         ]);
-
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
+    {
+        //
+        
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
         //
         $rules = [
@@ -53,33 +66,27 @@ class BookController extends Controller
         }
 
         Book::create($data);
-        return response()->json([
-            'status' => 'success',
-            'data' => $data
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBookRequest $request)
-    {
-        //
+        return redirect('/book')->with('success', 'New Category Has Been Added');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Book $book,$id)
+    public function show(Book $book)
     {
         //
-        $book = Book::find($id);
-        if (!$book){
+        $books = Book::find($book);
+        if (!$books){
             return response()->json([
                 'status'=> 'error',
                 'message'=> "recipe not found"
             ], 404);
         }
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data book',
+            'data'    => $book  
+        ]); 
     }
 
     /**
@@ -93,7 +100,7 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookRequest $request, Book $book, $id)
+    public function update(Request $request, Book $book )
     {
         //
         $rules = [
@@ -107,23 +114,21 @@ class BookController extends Controller
         $data = $request->all();
         $validator = Validator::make($data, $rules);
         if ($validator->fails()){
-            return response()->json([
-                'status'=> 'error',
-                'data' => $validator->errors()
-            ], 404);
+            return response()->json($validator->errors(), 422);
         }
 
-       $books = Book::find($id);
-       if (!$books){
+       
+       if (!$book){
         return response()->json([
             'status' => 'error',
             'message' => 'book not found'
         ], 404);
          }
-        $books->fill($data);
-        $books->save();
+        $book->update($data);
+        $book->save();
         return response()->json([
-            'status' => 'success',
+            'success' => true,
+            'message' => 'Data Berhasil Diudapte!',
             'data' => $data
         ]);
     }
@@ -131,8 +136,8 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy (Request $request, $id){
-        $book = Book::find($id);
+    public function destroy (Book $book){
+       
 
         if (!$book){
             return response()->json([
@@ -141,10 +146,8 @@ class BookController extends Controller
             ], 404);
         }
 
-        $book->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'books delete'
-        ]);
+        Book::destroy($book->id);
+
+        return redirect('/book')->with('success', ' Post Has Been Deleted');
     }
 }

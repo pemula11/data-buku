@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->string('author', 50);
             $table->string('publisher', 50);
-            $table->decimal('num_page', 3);
+            $table->integer('num_page', 3);
             $table->date("publish_date");
             $table->timestamps();
             
