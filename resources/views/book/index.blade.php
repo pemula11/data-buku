@@ -17,17 +17,7 @@
                     Tambah Data
                   </button>
 
-                  <div class="row">
-                      <div class="d-flex">
-                          <form action="/dashboard/solusi" method="GET">
-                            <div class="d-flex">
-                              <input type="search" class="form-control me-2" placeholder="Search" aria-label="Search" name="search">
-                              <button class="btn btn-outline-secondary" type="submit">Search</button>
-                            </div>
-                           </form>
-                      </div>
-                 </div>
-
+                 
                   
             </div>
    </div>
@@ -37,7 +27,7 @@
        <div class="card-header text-white bg-black">
            Data Buku
        </div>
-      
+       
        <div class="card-body">
            <table class="table" id="buku-table">
                <thead>
@@ -53,12 +43,12 @@
                    </tr>
                </thead>
                <tbody>
-                @foreach ($buku as $data)
-                
+               
+               @foreach ($buku as $data)
                     <tr>
                         <th scope="row">{{ $loop->iteration }}</th>
                         <td> {{$data->title}} </td>
-                        <td></td>
+                        <td> {{$data->category->name}}</td>
                         <td>{{$data->author}}</td>
                         <td>{{$data->publisher}}</td>
                         <td>{{$data->publish_date}}</td>

@@ -6,6 +6,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
@@ -16,11 +17,8 @@ class BookController extends Controller
     public function index(Request $request)
     {
         //
-        $data = Book::query();
-        $q = $request->query('title');
-        $data->when($q, function($query) use ($q){
-            return $query->whereRaw("title LIKE '%".strtolower($q)."%'");
-        });
+        $data = Book::with('category')->get();
+        $categories = Category::pluck('name', 'id');
         // return response()->json([
         //     'status' => 'success',
         //     'data' => $data->paginate(10)
@@ -28,7 +26,8 @@ class BookController extends Controller
         return view('book.index', [
             "tittle" => "Book",
             "active" => "book",
-            'buku' => $data->paginate(10)
+            'buku' => $data,
+            "category" => $categories
         ]);
     }
 

@@ -23,6 +23,21 @@
                         @enderror
                     </div>
                 </div>
+                
+        
+      
+
+                <div class="mb-3 row form-group">
+                  <label for="category-option" class="col-sm-3 col-form-label">Kategoti</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" id="category-option" name="category_id">
+                    @foreach ($category as $id=>$name)
+
+                          <option value="{{ $id }}">{{ $name }} </option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
 
                 <div class="mb-3 row form-group">
                     <label for="author" class="col-sm-3 col-form-label">Author</label>
@@ -59,7 +74,7 @@
                         @enderror
                     </div>
                 </div>
-
+    
                 <div class="mb-3 row form-group">
                     <label for="nama" class="col-sm-3 col-form-label">Total page</label>
                     <div class="col-sm-9">
@@ -99,17 +114,7 @@
   </div>
 
   <script>
-        $("#kode_gejala").on({
-    keydown: function(e) {
-    if (e.which === 32 || e.which == 222 || e.which == 221 || e.which == 219 || e.which == 220 || e.which == 187)
-        return false;
-    
-    },
-    change: function() {
-        this.value = this.value.replace(/\s/g, "");   
-    }
-    
-    });
+        
 
     $('body').on('click', '#btn-add-buku', function () {
         $('#add-data').modal('show'); 

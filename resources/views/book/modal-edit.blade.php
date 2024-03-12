@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body mb-3 row form-group">
 
                 <input type="hidden" id="book_id">
 
@@ -17,6 +17,18 @@
                     <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title-edit"></div>
                 </div>
                 
+
+                <div class="form-group">
+                  <label for="category-option" class="control-label">Kategoti</label>
+                  
+                    <select class="form-control" id="category-option" name="category_id">
+                        @foreach ($category as $id=>$name)
+
+                            <option value="{{ $id }}">{{ $name }} </option>
+                        @endforeach
+                    </select>
+                  
+                </div>
 
                 <div class="form-group">
                     <label for="name" class="control-label">Author</label>
@@ -79,10 +91,19 @@
                 $('#date-edit').val(response.data.publish_date);
                 $('#page-edit').val(response.data.num_page);
 
+                
+                    // Get select
+                var select = document.getElementById('category-option');
+
+
+                // Set selected value
+                $(select).val(response.data.category_id);
+
                 //open modal
                 $('#modal-edit').modal('show');
             }
         });
+        
     });
 
     //action update post
