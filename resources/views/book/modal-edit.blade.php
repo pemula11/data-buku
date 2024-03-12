@@ -36,11 +36,7 @@
                     <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title-edit"></div>
                 </div>
 
-                <div class="form-group">
-                    <label for="name" class="control-label">Category</label>
-                    <input type="text" class="form-control" id="category-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title-edit"></div>
-                </div>
+               
 
                 <div class="form-group">
                     <label for="name" class="control-label">Publisher</label>
@@ -86,18 +82,17 @@
                 $('#book_id').val(response.data.id);
                 $('#title-edit').val(response.data.title);
                 $('#author-edit').val(response.data.author);
-                $('#category-edit').val(response.data.category_id);
+               
                 $('#publisher-edit').val(response.data.publisher);
                 $('#date-edit').val(response.data.publish_date);
                 $('#page-edit').val(response.data.num_page);
 
-                
+               
                     // Get select
                 var select = document.getElementById('category-option');
 
 
                 // Set selected value
-                $(select).val(response.data.category_id);
 
                 //open modal
                 $('#modal-edit').modal('show');
@@ -114,15 +109,15 @@
         let book_id = $('#book_id').val();
         let title   = $('#title-edit').val();
         let author   = $('#author-edit').val();
-        let category   = $('#category-edit').val();
+        let category   = $('#category-option').val();
         let publisher   = $('#publisher-edit').val();
-        let date   = $('#date-edit').val();
+        let date   = ($('#date-edit').val());
         let page   = $('#page-edit').val();
         let token   = $("meta[name='csrf-token']").attr("content");
-        
+        console.log(date);
         //ajax
         $.ajax({
-
+            
             url: `/book/${book_id}`,
             type: "PUT",
             cache: false,
@@ -131,7 +126,7 @@
                 "author": author,
                 "category_id": category,
                 "publisher": publisher,
-                "publisht_date": date,
+                "publish_date": date,
                 "num_page": parseInt(page),
                 "_token": token
             },
@@ -142,10 +137,11 @@
                     type: 'success',
                     icon: 'success',
                     title: `${response.message}`,
-                    showConfirmButton: false,
                     timer: 3000
-                });
-
+                    }).then(function(){ 
+                         location.reload();
+                     }
+                );
                 //data post
                 let post = `
                     <tr id="index_${response.data.id}">

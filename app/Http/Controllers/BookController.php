@@ -8,6 +8,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class BookController extends Controller
 {
@@ -65,7 +66,7 @@ class BookController extends Controller
         }
 
         Book::create($data);
-        return redirect('/book')->with('success', 'New Category Has Been Added');
+        return redirect('/book')->with('success', 'New Book Has Been Added');
     }
 
     /**
@@ -106,7 +107,7 @@ class BookController extends Controller
             'title' => 'string',
             'author' => 'string',
             'publisher' => 'string',
-            'publish_date' => 'date',
+            
             'num_page' => 'integer',
         ];
 
@@ -115,8 +116,6 @@ class BookController extends Controller
         if ($validator->fails()){
             return response()->json($validator->errors(), 422);
         }
-
-       
        if (!$book){
         return response()->json([
             'status' => 'error',

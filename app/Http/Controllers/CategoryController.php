@@ -14,14 +14,16 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         //
-        $data = Category::query();
-        $q = $request->query('name');
-        $data->when($q, function($query) use ($q){
-            return $query->whereRaw("name LIKE '%".strtolower($q)."%'");
-        });
-        return response()->json([
-            'status' => 'success',
-            'data' => $data->paginate(10)
+        
+        $categories = Category::get();
+        // return response()->json([
+        //     'status' => 'success',
+        //     'data' => $data->paginate(10)
+        // ]);
+        return view('category.index', [
+            "tittle" => "Book",
+            "active" => "book",
+            'category' => $categories,
         ]);
     }
 
@@ -29,6 +31,15 @@ class CategoryController extends Controller
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
+    {
+        //
+       
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
         //
         $rules = [
@@ -46,18 +57,8 @@ class CategoryController extends Controller
         }
 
         Category::create($data);
-        return response()->json([
-            'status' => 'success',
-            'data' => $data
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+      
+        return redirect('/category')->with('success', 'New Category Has Been Added');
     }
 
     /**
@@ -66,6 +67,18 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
+        $categories = Category::find($category)->first();
+        if (!$categories){
+            return response()->json([
+                'status'=> 'error',
+                'message'=> "category not found"
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data category',
+            'data'    => $categories  
+        ]); 
     }
 
     /**
@@ -79,7 +92,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category, $id)
+    public function update(Request $request, Category $category)
     {
         //
         $rules = [
@@ -90,47 +103,53 @@ class CategoryController extends Controller
         $data = $request->all();
         $validator = Validator::make($data, $rules);
         if ($validator->fails()){
-            return response()->json([
-                'status'=> 'error',
-                'data' => $validator->errors()
-            ], 404);
+            return response()->json($validator->errors(), 422);
         }
-
-        $categorys = Category::find($id);
-       if (!$categorys){
-        return response()->json([
-            'status' => 'error',
-            'message' => 'category not found'
-        ], 404);
-         }
-        $categorys->fill($data);
-        $categorys->save();
-        return response()->json([
-            'status' => 'success',
-            'data' => $data
-        ]);
+        if (!$category){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'book not found'
+            ], 404);
+             }
+            $category->update($data);
+            $category->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Diudapte!',
+                'data' => $data
+            ]);
        
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category, $id)
+    public function destroy(Category $category)
     {
         //
-        $cat = Category::find($id);
-
-        if (!$cat){
+        if (!$category){
             return response()->json([
                 'status' => 'error',
-                'message' => 'category not found'
+                'message' => 'book not found'
             ], 404);
         }
 
-        $cat->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'category delete'
-        ]);
+        $category = Category::find($category->id);
+
+        try {
+            $category->delete();
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000)
+            {
+                //SQLSTATE[23000]: Integrity constraint violation
+                return redirect('/category')->with('failed', 'Resource cannot be deleted due to existence of related resources.');
+                
+            }
+        }
+
+        return redirect('/category')->with('success', ' Post Has Been Deleted');
+
     }
 }

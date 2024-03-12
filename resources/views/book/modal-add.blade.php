@@ -28,9 +28,9 @@
       
 
                 <div class="mb-3 row form-group">
-                  <label for="category-option" class="col-sm-3 col-form-label">Kategoti</label>
+                  <label for="category-option" class="col-sm-3 col-form-label">Kategori</label>
                   <div class="col-sm-9">
-                    <select class="form-control" id="category-option" name="category_id">
+                    <select class="form-control" id="category_id" name="category_id">
                     @foreach ($category as $id=>$name)
 
                           <option value="{{ $id }}">{{ $name }} </option>
@@ -87,17 +87,7 @@
                     </div>
                 </div>
 
-                <div class="mb-3 row form-group">
-                    <label for="nama" class="col-sm-3 col-form-label">category</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control @error('category_id') is-invalid @enderror" id="category_id" name="category_id" value="{{old('category_id')}}" required>
-                        @error('category_id')
-                        <div id="validationServer03Feedback" class="invalid-feedback">
-                           {{ $message }}.
-                         </div>
-                        @enderror
-                    </div>
-                </div>
+                
 
                 <div class="col-12" align="right">
                     <input type="submit" name="simpan" value="Simpan Data" class="btn btn-primary">

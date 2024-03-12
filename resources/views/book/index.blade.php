@@ -104,3 +104,4 @@ new DataTable('#buku-table');
 </script>
 
 @endsection
+
